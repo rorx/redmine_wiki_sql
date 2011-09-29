@@ -1,0 +1,18 @@
+This plugins allows a redmine user to run SQL queries inside redmine's wiki pages.
+
+Installation
+
+Follow the default redmine plugin installation steps at http://www.redmine.org/projects/redmine/wiki/Plugins
+
+Usage:
+
+Put this inside a wiki page: {{sql( *Your Query* )}}
+
+Example:
+
+{{sql(select id as 'ID', subject as 'Subject', DATE_FORMAT\(issues.due_date , '%d/%m/%Y'\) AS 'Due Date' from issues)}}
+
+Known problems:
+
+- Can't change column's order
+- User has to manually escape parenthesis with \
