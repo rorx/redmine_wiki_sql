@@ -14,5 +14,8 @@ Example:
 
 Known problems:
 
-- Can't change column's order
 - User has to manually escape parenthesis with \
+
+Bug Fixes:
+
+- Can't change column's order [SOLVED]
