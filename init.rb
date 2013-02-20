@@ -16,6 +16,7 @@ Redmine::Plugin.register :redmine_wiki_sql do
         _sentence = args.join(",")
         _sentence = _sentence.gsub("\\(", "(")
         _sentence = _sentence.gsub("\\)", ")")
+        _sentence = _sentence.gsub("\\*", "*")
 
         result = ActiveRecord::Base.connection.execute(_sentence)
         unless result.nil?
