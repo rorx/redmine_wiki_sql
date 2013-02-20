@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_wiki_sql do
 
   Redmine::WikiFormatting::Macros.register do
     desc "Run SQL query"
-    macro :sql do |obj, args|
+    macro :sql do |obj, args, text|
        
         _sentence = args.join(",")
         _sentence = _sentence.gsub("\\(", "(")
@@ -38,14 +38,14 @@ Redmine::Plugin.register :redmine_wiki_sql do
               end 
             end
             
-            _table = '<table>' << _thead << _tbody << '</table>' 
+            text = '<table>' << _thead << _tbody << '</table>' 
                        
-            return _table
+            text.html_safe
           else
-            return ''
+            ''.html_safe
           end
         else
-          return ''
+          ''.html_safe
         end
     end	
   end
