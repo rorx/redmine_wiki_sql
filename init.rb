@@ -32,7 +32,7 @@ Redmine::Plugin.register :redmine_wiki_sql do
               unless record.nil?
                 _tbody << '<tr>'
                 record.each do |key,value|
-                  _tbody << '<td>' + value.to_s + '</td>'
+                  _tbody << '<td>' + textilizable(value.to_s) + '</td>'
                 end
                 _tbody << '</tr>'
               end 
