@@ -4,18 +4,51 @@ Installation
 
 Follow the default redmine plugin installation steps at http://www.redmine.org/projects/redmine/wiki/Plugins
 
+Then set up the DB config via the admin panel in Administration > Plugins > Wiki SQL:
+
+    Configure a seperate user with read only minimal permissions to the database you want to use (may be redmine or any other unrelated database -
+    only MySQL supported for now, more available as needed?)
+
+    ALWAYS make sure it is a readonly user. Control how many resources (cpu/memory) can be consumed by this user, because any user of redmine
+    can cause queries to be executed by tricking an authorized user into viewing any comment editable by the attacker.
+
+    Then, for reading security, only users with 'SQL Authority' custom field value of 'True' will actually be able to view the tables.
+
 Usage:
 
-Put this inside a wiki page: {{sql( *Your Query* )}}
+Put this inside a wiki page: {{sql(somedatabasename)
+    select some 
+        from thing 
+        where blah = 81
+}}
 
-Example:
+Examples:
 
-{{sql(select id as 'ID', subject as 'Subject', DATE_FORMAT\(issues.due_date , '%d/%m/%Y'\) AS 'Due Date' from issues)}}
+{{sql(redmine)
+    select id as 'ID', 
+        subject as 'Subject', 
+        DATE_FORMAT(issues.due_date , '%d/%m/%Y') AS 'Due Date' 
+    from issues
+}}
 
-Known problems:
+{{sql(redmine)
+select 
+    curdate(), 
+    2+40, 
+    "If you can see this, it worked!"
+}}
 
-- User has to manually escape parenthesis with \
-
-Bug Fixes:
-
+Fixed former problems:
+- User has to manually escape parenthesis with \ [SOLVED]
+- User cannot format SQL across multiple lines for complex queries [SOLVED]
 - Can't change column's order [SOLVED]
+
+Added features
+- Returned text is itself textilized which can be quite nice when e.g., pulling formatted redmine text out of db!
+
+Known problems
+- Would still be nice to restrict EDITING queries rather than VIEWING them (would be more hassle)
+- Would be nice to allow auto-retextilization to support markdown and to make it optional
+- auto-retextilization can give an infinite loop if someone is so unwise as to make it refer to itself...
+
+
