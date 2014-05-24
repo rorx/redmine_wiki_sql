@@ -1,0 +1,29 @@
+<em>
+Configure a seperate user with read only minimal permissions to the database you want to use (may be redmine or any other unrelated database -
+only MySQL supported for now, more available as needed?)
+
+<p>ALWAYS make sure it is a readonly user. Control how many resources (cpu/memory) can be consumed by this user, because any user of redmine
+can cause queries to be executed by tricking an authorized user into viewing any comment editable by the attacker.
+
+<p>Then, for reading security, only users with 'SQL Authority' custom field value of 'True' will actually be able to view the tables.
+</em><br /><br />
+
+<p><label>External Database Host</label>
+<%= text_field_tag 'settings[rdbms_host]', @settings['rdbms_host'], :size => 80 %>
+<br /><em>Hostname to connect to</em></p>
+
+<p><label>RDBMS Vendor</label>
+<%= select_tag 'settings[rdbms_vendor]', options_for_select(['MySQL'], @settings['rdbms_vendor']) %></p>
+
+<p><label>RDBMS Username</label>
+<%= text_field_tag 'settings[rdbms_username]', @settings['rdbms_username'], :size => 80 %>
+<br /><em>Database username. You should create a new user with limited readonly access</em></p>
+
+<p><label>RDBMS Password</label>
+<%= text_field_tag 'settings[rdbms_password]', @settings['rdbms_password'], :size => 80 %>
+<br /><em>Database password</em></p>
+
+<p><label>RDBMS Connection Port</label>
+<%= text_field_tag 'settings[rdbms_port]', @settings['rdbms_port'], :size => 10 %>
+<br /><em>Database port (try 3306 for MySQL)</em></p>
+
