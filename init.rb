@@ -7,7 +7,7 @@ Redmine::Plugin.register :redmine_wiki_sql do
   author 'Rodrigo Ramalho'
   author_url 'http://www.rodrigoramalho.com/'
   description 'Allows you to run SQL queries and have them shown on your wiki in table format'
-  version '0.0.1'
+  version '0.2'
 
   Redmine::WikiFormatting::Macros.register do
     desc "Run SQL query"
@@ -18,40 +18,28 @@ Redmine::Plugin.register :redmine_wiki_sql do
         _sentence = _sentence.gsub("\\)", ")")
         _sentence = _sentence.gsub("\\*", "*")
 
-        result = ActiveRecord::Base.connection.execute(_sentence)
-        unless result.nil?
-          unless result.num_rows() == 0
-            column_names = []
-            for columns in result.fetch_fields.each do
-              column_names += columns.name.to_a
-            end
-
-            _thead = '<tr>'
-            column_names.each do |column_name|
-              _thead << '<th>' + column_name.to_s + '</th>'
-            end
-            _thead << '</tr>'
-
-            _tbody = ''
-            result.each_hash do |record|
-              unless record.nil?
-                _tbody << '<tr>'
-                column_names.each do |column_name|
-                  _tbody << '<td>' + record[column_name].to_s + '</td>'
-                end
-                _tbody << '</tr>'
-              end 
-            end
-
-            text = '<table>' << _thead << _tbody << '</table>' 
-
-            text.html_safe
-          else
-            ''.html_safe
-          end
-        else
-          ''.html_safe
+        result = ActiveRecord::Base.connection.exec_query(_sentence)
+        _thead = '<thead><tr>'
+        result.columns.each do |column|
+          _thead << '<th>' + column.to_s + '</th>'
         end
+        _thead << '</tr></thead>'
+
+        unless result.empty?()
+          _tbody = '<tbody>'
+          result.each do |row|
+            _tbody << '<tr>'
+            result.columns.each do |column|
+              _tbody << '<td>' + row[column.to_s].to_s + '</td>'
+            end
+            _tbody << '</tr>'
+          end
+          _tbody << '</tbody>'
+        else
+          _tbody = ''
+        end
+        text = '<table>' << _thead << _tbody << '</table>' 
+        text.html_safe
     end 
   end
 	
